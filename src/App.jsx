@@ -1,9 +1,8 @@
 import './App.css'
 import React, {useContext, useEffect, useState} from "react"
-import Register from './components/Register'
-import Header from './components/Header'
 import { UserContext } from './context/UserContext'
-import Login from './components/Login'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { PageLogin, PageRegister, PageHome } from './components/Pages'
 
 const App = () => {
   const [message, setMessage] = useState("")
@@ -32,25 +31,32 @@ const App = () => {
     getWelcomeMessage()
   }, [])
   return (
-    <>
-      <Header title={message}/>
-      <div className="columns">
-        <div className="column"></div>
-        <div className="column m-5 is-two-thirds">
-          {
-            !token ? (
-              <div className="columns">
-                <Register/>
-                <Login/>
-              </div>
-            ): (
-              <p>Table</p>
-            )
-          }
-        </div>
-        <div className="column"></div>
-      </div>
-    </>
+    <BrowserRouter>
+        <Routes>
+              <Route path="/" element={<PageLogin />} />
+              <Route path="register" element={<PageRegister />} />
+              <Route path="home" element={<PageHome/>} />
+        </Routes>
+      </BrowserRouter>
+    // <>
+    //   <Header title={message}/>
+    //   <div className="columns">
+    //     <div className="column"></div>
+    //     <div className="column m-5 is-two-thirds">
+    //       {
+    //         !token ? (
+    //           <div className="columns">
+    //             <Register/>
+    //             <Login/>
+    //           </div>
+    //         ): (
+    //           <p>Table</p>
+    //         )
+    //       }
+    //     </div>
+    //     <div className="column"></div>
+    //   </div>
+    // </>
   )
 }
 

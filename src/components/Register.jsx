@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react"
 
-import { UserContext } from "../context/UserContext";
-import ErrorMessage from "./ErrorMessage";
+import { UserContext } from "../context/UserContext"
+import ErrorMessage from "./ErrorMessage"
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 const Register = () => {
     const [name, setName] = useState("")
@@ -25,7 +26,9 @@ const Register = () => {
         if(!response.ok) {
             setErrorMessage(data.detail)
         } else {
-            setToken(data.access_token)
+            // setToken(data.access_token)
+            console.log('WD');
+            navigate('/', {replace: true})
         }
     }
 
@@ -38,6 +41,12 @@ const Register = () => {
         }
     }
     
+    const location = useLocation()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        console.log('Current location is ', location)
+    }, [location])
     return (
         <div className="column">
             <form className="box" onSubmit={handleSubmit}>
@@ -89,8 +98,11 @@ const Register = () => {
                 <ErrorMessage message={errorMessage} />
                 <br/>
                 <button className="button is-primary" type="submit">Register</button>
+                <hr />
+                <Outlet />
             </form>
         </div>
     )
 }
+
 export default Register
