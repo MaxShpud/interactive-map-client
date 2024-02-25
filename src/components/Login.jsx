@@ -1,13 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react"
 
-import ErrorMessage from "./ErrorMessage";
-import { UserContext } from "../context/UserContext";
+import ErrorMessage from "./ErrorMessage"
+import { UserContext } from "../context/UserContext"
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [, setToken] = useContext(UserContext);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
+  const [, setToken] = useContext(UserContext)
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    console.log('Current location is ', location)
+  }, [location])
 
   const submitLogin = async () => {
     const requestOptions = {
@@ -22,16 +29,19 @@ const Login = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      setErrorMessage(data.detail);
+      setErrorMessage(data.detail)
     } else {
-      setToken(data.access_token);
+      setToken(data.access_token)
+      navigate('/home', {replace: true})
     }
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    submitLogin();
+    e.preventDefault()
+    submitLogin()
   };
+
+  
 
   return (
     <div className="column">
@@ -70,8 +80,10 @@ const Login = () => {
         </button>
       </form>
       <p className="has-text-centered">
-        Don't have an account? <a href=".Register">Register here</a>
+        Don't have an account? <button onClick={() => navigate('register', {replace: false})}>Register here</button>
       </p>
+      <hr />
+      <Outlet />
     </div>
   );
 };
