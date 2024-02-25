@@ -1,6 +1,6 @@
 import Register from './Register'
 import Login from './Login'
-import Home from './Home'
+import Home from './Home.jsx'
 
 const BuildPage = (index) => (
     index  
@@ -8,4 +8,4 @@ const BuildPage = (index) => (
 
 export const PageLogin = () => BuildPage(<Login/>)
 export const PageRegister = () => BuildPage(<Register/>)
-export const PageHome = () => BuildPage(<Home/>)
+export const PageHome = () => BuildPage(<Home />)

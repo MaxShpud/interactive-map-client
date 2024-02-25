@@ -30,12 +30,13 @@ const App = () => {
   useEffect(() => {
     getWelcomeMessage()
   }, [])
+  
   return (
     <BrowserRouter>
         <Routes>
               <Route path="/" element={<PageLogin />} />
               <Route path="register" element={<PageRegister />} />
-              <Route path="home" element={<PageHome/>} />
+              <Route path="home" element={<PageHome />} />
         </Routes>
       </BrowserRouter>
     // <>
