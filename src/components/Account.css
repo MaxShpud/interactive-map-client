@@ -1,0 +1,40 @@
+.account-card {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .account-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .account-info {
+    margin-bottom: 10px;
+  }
+  
+  .account-info label {
+    font-weight: bold;
+  }
+  
+  .account-info p {
+    margin: 5px 0;
+  }
+  
+  .account-description {
+    margin-bottom: 20px;
+  }
+  
+  .account-description p {
+    margin: 5px 0;
+  }
+  
+  .account-objects {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  

@@ -1,10 +1,11 @@
 import React, { useState, useContext, useEffect } from "react"
 
-import ErrorMessage from "./ErrorMessage"
-import { UserContext } from "../context/UserContext"
+import ErrorMessage from "../ErrorMessage"
+import { UserContext } from "../../context/UserContext"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import './SighInForm.css'
 
-const Login = () => {
+const SignIn = ({theme, setTheme}) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
@@ -44,15 +45,17 @@ const Login = () => {
   
 
   return (
-    <div className="column">
+    <div className={`mainContainer ${theme}`}>
+      <div className="titleContainer">
+        <h1>Login</h1>
+      </div>
+      
       <form className="box" onSubmit={handleSubmit}>
-        <h1 className="title has-text-centered">Login</h1>
         <div className="field">
-          <label className="label">Email Address</label>
           <div className="control">
             <input
               type="email"
-              placeholder="Enter email"
+              placeholder="Enter your email here"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="input"
@@ -61,11 +64,10 @@ const Login = () => {
           </div>
         </div>
         <div className="field">
-          <label className="label">Password</label>
           <div className="control">
             <input
               type="password"
-              placeholder="Enter password"
+              placeholder="Enter your password here"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input"
@@ -76,16 +78,15 @@ const Login = () => {
         <ErrorMessage message={errorMessage} />
         <br />
         <button className="button is-primary" type="submit">
-          Login
+          Log in
         </button>
       </form>
       <p className="has-text-centered">
         Don't have an account? <button onClick={() => navigate('register', {replace: false})}>Register here</button>
       </p>
-      <hr />
       <Outlet />
     </div>
   );
 };
 
-export default Login;
+export default SignIn;

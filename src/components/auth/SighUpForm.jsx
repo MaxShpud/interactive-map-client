@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from "react"
-
-import { UserContext } from "../context/UserContext"
-import ErrorMessage from "./ErrorMessage"
+import './SignUpForm.css'
+import { UserContext } from "../../context/UserContext"
+import ErrorMessage from "../ErrorMessage"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
-const Register = () => {
+const SighUp = ({theme, setTheme}) => {
     const [name, setName] = useState("")
     const [surname, setSurname] = useState("")
     const [email, setEmail] = useState("")
@@ -48,7 +48,7 @@ const Register = () => {
         console.log('Current location is ', location)
     }, [location])
     return (
-        <div className="column">
+        <div className={`column ${theme}`}>
             <form className="box" onSubmit={handleSubmit}>
                 <h1 className="title has-text-centered">Register</h1>
                 <div className="field">
@@ -105,4 +105,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default SighUp

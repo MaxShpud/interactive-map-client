@@ -6,14 +6,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import NavBar from "./navbar/NavBar";
 
 
-const Home = () => {
+const Home = ({theme, setTheme}) => {
     const [token] = useContext(UserContext)
-    const current_theme = localStorage.getItem('current_theme')
-    const [theme, setTheme] = useState(current_theme? current_theme: 'light')
-
-    useEffect(()=>{
-        localStorage.setItem('current_theme', theme)
-    }, [theme])
+    
 
     const location = useLocation()
     const navigate = useNavigate()
