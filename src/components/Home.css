@@ -16,3 +16,16 @@
     background: #222;
 
 }
+
+.map-items {
+    margin-top: 20px;
+    display: flex; 
+    justify-content: space-between; 
+  }
+
+.leaflet-container{
+    height: 600px;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+}

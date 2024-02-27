@@ -2,12 +2,19 @@ import './App.css'
 import React, {useContext, useEffect, useState} from "react"
 import { UserContext } from './context/UserContext'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { PageLogin, PageRegister, PageHome } from './components/Pages'
+import { PageLogin, PageRegister, PageHome, PageAccount } from './components/Pages'
 
 const App = () => {
   const [message, setMessage] = useState("")
 
   const [token] = useContext(UserContext)
+  const current_theme = localStorage.getItem('current_theme')
+    
+  const [theme, setTheme] = useState(current_theme? current_theme: 'light')
+
+    useEffect(()=>{
+        localStorage.setItem('current_theme', theme)
+    }, [theme])
 
   const getWelcomeMessage = async () => {
     const requestOptions = {
@@ -34,9 +41,10 @@ const App = () => {
   return (
     <BrowserRouter>
         <Routes>
-              <Route path="/" element={<PageLogin />} />
-              <Route path="register" element={<PageRegister />} />
-              <Route path="home" element={<PageHome />} />
+              <Route path="/" element={<PageLogin theme={theme} setTheme={setTheme}/>} />
+              <Route path="register" element={<PageRegister theme={theme} setTheme={setTheme}/>} />
+              <Route path="home" element={<PageHome theme={theme} setTheme={setTheme}/>} />
+              <Route path="account" element={<PageAccount theme={theme} setTheme={setTheme}/>} />
         </Routes>
       </BrowserRouter>
     // <>
