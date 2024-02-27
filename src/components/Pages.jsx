@@ -2,6 +2,7 @@ import SighUp from './auth/SighUpForm.jsx'
 import SignIn from './auth/SignInForm.jsx'
 import Home from './Home.jsx'
 import Account from './Account.jsx'
+
 const BuildPage = (index) => (
     index  
 )

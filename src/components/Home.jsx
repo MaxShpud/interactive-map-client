@@ -9,7 +9,6 @@ import NavBar from "./navbar/NavBar";
 const Home = ({theme, setTheme}) => {
     const [token] = useContext(UserContext)
     
-
     const location = useLocation()
     const navigate = useNavigate()
 
