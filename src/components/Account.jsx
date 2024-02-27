@@ -14,7 +14,7 @@ const Account = ({theme, setTheme}) => {
     const token = localStorage.getItem('mapToken')
     const [editingField, setEditingField] = useState(null)
     const [editedValue, setEditedValue] = useState('')
-    const [avatar, setAvatar] = useState(null)
+    const [avatarUser, setAvatarUser] = useState(null)
 
     useEffect(() => {
         
@@ -55,24 +55,20 @@ const Account = ({theme, setTheme}) => {
     }
 
     const handleFileInputChange = (event) => {
-        setAvatar(event.target.files[0])
+        setAvatarUser(event.target.files[0])
     }
 
-    const handleFileSubmit = async (event) => {
+    const handleSubmit = async (event) => {
         
-        event.preventDefault()
 
         const formData = new FormData()
-        formData.append('file', avatar)
-        console.log("Token:", token);
-        for (var pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
+        formData.append('file', avatarUser)
         try{
-            const response = await fetch('/api/file/avatar', {
+            const endpoint = "/api/file/avatar"
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    // 'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`
                 },
                 body: formData
@@ -101,6 +97,7 @@ const Account = ({theme, setTheme}) => {
                 },
                 body: JSON.stringify({ [editingField]: editedValue })
             })
+            
             if (response.ok) {
                 
                 const updatedUserData = await response.json()
@@ -118,6 +115,7 @@ const Account = ({theme, setTheme}) => {
     if (!userData) {
         return null
     }
+    console.log(avatarUser)
     return (
         
         <div className={`container ${theme}`}>
@@ -129,7 +127,7 @@ const Account = ({theme, setTheme}) => {
                     )}
                     <div className="uploadSection">
                         <h2>Update the photo</h2>
-                        <form onSubmit={handleFileSubmit}>
+                        <form onSubmit={handleSubmit}>
                             <div className="file-upload">
                                 <input type="file" onChange={handleFileInputChange}/>
                             </div>

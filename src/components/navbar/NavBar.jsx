@@ -20,6 +20,7 @@ const NavBar = ({theme, setTheme}) =>{
     }
     const handleLogout = () => {
         setToken(null)
+        navigate('/', {replace: true})
     }
     return(
         <div className="navbar">
