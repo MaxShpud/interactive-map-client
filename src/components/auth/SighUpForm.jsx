@@ -10,7 +10,6 @@ const SighUp = ({theme, setTheme}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-    const[, setToken] = useContext(UserContext)
 
 
     const submitRegistration = async () => {
@@ -26,7 +25,7 @@ const SighUp = ({theme, setTheme}) => {
         if(!response.ok) {
             setErrorMessage(data.detail)
         } else {
-            // setToken(data.access_token)
+            
             console.log('WD');
             navigate('/', {replace: true})
         }

@@ -9,7 +9,8 @@ const SignIn = ({theme, setTheme}) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
-  const [, setToken] = useContext(UserContext)
+  const [, setUserData] = useContext(UserContext)
+  //const [, setUserRole] = useContext(UserContext)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -28,11 +29,11 @@ const SignIn = ({theme, setTheme}) => {
 
     const response = await fetch("/api/login/token", requestOptions);
     const data = await response.json();
-
     if (!response.ok) {
       setErrorMessage(data.detail)
     } else {
-      setToken(data.access_token)
+      setUserData({ token: data.access_token, userRole: data.role})
+
       navigate('/home', {replace: true})
     }
   };
