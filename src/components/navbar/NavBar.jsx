@@ -13,13 +13,13 @@ import logout_light from '../../assets/logout_w.png'
 import Account from "../Account";
 
 const NavBar = ({theme, setTheme}) =>{
-    const [token, setToken] = useContext(UserContext)
+    const [userData, setUserData] = useContext(UserContext)
     const navigate = useNavigate()
     const toggle_mode = () =>{
         theme == 'light' ? setTheme('dark') : setTheme('light')
     }
     const handleLogout = () => {
-        setToken(null)
+        setUserData({ token: null, userRole: null });
         navigate('/', {replace: true})
     }
     return(
@@ -27,10 +27,11 @@ const NavBar = ({theme, setTheme}) =>{
                 <img src={theme == 'light' ? logo_light: logo_dark} alt="" className="logo"/>
                 <ul>
                     <li onClick={() => navigate('/home', {replace: true})}>Home</li>
-                    <li>Map</li>
+                    <li onClick={() => navigate('/map', {replace: true})}>Map</li>
                     <li>Routes</li>
                     <li>Favourites</li>
                     <li onClick={() => navigate('/account', {replace: true})}>Account</li>
+                    {userData.userRole === 'ADMIN' && <li>Admin Panel</li>}
                 </ul>
                 <div className="search-box">
                     <input type="text" placeholder="Search" />
@@ -38,7 +39,7 @@ const NavBar = ({theme, setTheme}) =>{
                 </div>
 
                 <img onClick={()=>{toggle_mode()}} src={theme == 'light' ? toggle_light: toggle_dark} alt="" className="toggle-icon"/>
-                {token && (<img onClick={handleLogout} src={theme == 'light' ? logout_light: logout_dark} alt="" className="logout"/>)}
+                {userData.token && (<img onClick={handleLogout} src={theme == 'light' ? logout_light: logout_dark} alt="" className="logout"/>)}
             </div> 
     )
 }

@@ -3,7 +3,11 @@ import React, { createContext, useEffect, useState } from "react";
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
-  const [token, setToken] = useState(localStorage.getItem("mapToken"));
+
+  const [userData, setUserData] = useState({
+    token: localStorage.getItem("mapToken"),
+    userRole: localStorage.getItem("userRole")
+  });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -11,22 +15,23 @@ export const UserProvider = (props) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + userData.token,
         },
       };
 
-      const response = await fetch("/api/user/me", requestOptions);
-
+      const response = await fetch("/api/user/me", requestOptions)
+  
       if (!response.ok) {
-        setToken(null);
+        setUserData({ token: null, userRole: null });
       }
-      localStorage.setItem("mapToken", token);
+      localStorage.setItem("mapToken", userData.token);
+      localStorage.setItem("userRole", userData.userRole)
     };
-    fetchUser();
-  }, [token]);
+    fetchUser()
+  },  [userData.token])
 
   return (
-    <UserContext.Provider value={[token, setToken]}>
+    <UserContext.Provider value={[userData, setUserData]} >
       {props.children}
     </UserContext.Provider>
   );

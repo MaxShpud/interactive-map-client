@@ -1,0 +1,25 @@
+.map-items {
+    margin-top: 20px;
+    display: flex; 
+    justify-content: space-between; 
+  }
+
+.leaflet-container{
+    height: 600px;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+}
+
+.cluster-icon{
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  background-color: #fff;
+  transform: translate(-25%, -25%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: 1rem;
+}
