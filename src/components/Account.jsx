@@ -9,7 +9,7 @@ import './Home.css'
 
 const Account = ({theme, setTheme}) => {
 
-    const [userData, setUserData] = useState(null)
+    const [userData, setUserData] = useContext(UserContext)
     const navigate = useNavigate()
     const token = localStorage.getItem('mapToken')
     const [editingField, setEditingField] = useState(null)

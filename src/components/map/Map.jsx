@@ -8,6 +8,8 @@ import fort_icon from '../../assets/pin-point.png'
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from "react-leaflet-cluster";
 import "./Map.css"
+import fav_unselected from '../../assets/favourite_unselected.png'
+import fav_selected from '../../assets/favourite_selected.png'
 
 const markerIcon = new Icon({
     iconUrl: fort_icon,
@@ -19,9 +21,12 @@ const Map = ({theme, setTheme}) => {
     const [userData, setUserData] = useContext(UserContext)
     const token = localStorage.getItem('mapToken')
     const [markers, setMarkers] = useState([]);
-    
+    const [showMarkerForm, setShowMarkerForm] = useState(false);
+    const [selectedMarker, setSelectedMarker] = useState(null);
+
     const location = useLocation()
     const navigate = useNavigate()
+
     useEffect(() => {
         const fetchMarkers = async () => {
             try {
@@ -60,6 +65,39 @@ const Map = ({theme, setTheme}) => {
             iconSize: point(33,33,true)
         })
     }
+
+    const handleMarkerButtonClick = (marker) => {
+        setSelectedMarker(marker);
+        setShowMarkerForm(true);
+    };
+    console.log("marker", markers)
+
+    const handleMarkerPhotoClick = async (marker) => {
+        const isFavourite = marker.is_favourite;
+
+        try {
+            const response = await fetch(`/api/object?object_id=${marker.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ is_favourite: !isFavourite })
+            });
+
+            if (response.ok) {
+                const updatedMarker = await response.json();
+                const updatedMarkers = markers.map((marker) =>
+                marker.id === updatedMarker.id ? updatedMarker : marker
+                );
+                setMarkers(updatedMarkers);
+            } else {
+                console.error("Failed to update marker");
+            }
+        } catch (error) {
+            console.error("Error updating marker:", error);
+        }
+    };
     return (
         <div className={`container ${theme}`}>
             <NavBar theme={theme} setTheme={setTheme}/>
@@ -74,30 +112,38 @@ const Map = ({theme, setTheme}) => {
             chunkedLoading 
             iconCreateFunction={createCustomClusterIcon}
             >
-                <Marker 
-                    position={new latLng(52.048022, 23.672885)}
-                    icon={markerIcon}>
-                    <Popup>Форт №5 Брестской крепости</Popup>
-                </Marker>
-                <Marker 
-                    position={new latLng(52.083423, 23.654902)}
-                    icon={markerIcon}>
-                    <Popup>Брестская крепость-герой</Popup>
-                </Marker>
-                <Marker 
-                    position={new latLng(52.086684, 23.686450)}
-                    icon={markerIcon}>
-                    <Popup>Музей спасенных художественных ценностей</Popup>
-                </Marker>
+                {markers.map((marker, index) => (
+                            <Marker key={index} position={marker.coordinates} icon={markerIcon} className="marker-cn">
+                                <Popup >
+                                <div className="popup-content">
+                                        <div className="marker-info">
+                                            {marker.name}
+                                            <img
+                                                src={
+                                                    marker.is_favourite
+                                                        ? fav_selected
+                                                        : fav_unselected
+                                                }
+                                                alt="Favourite"
+                                                className="marker-photo"
+                                                onClick={() =>
+                                                    handleMarkerPhotoClick(
+                                                        marker
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                        <button onClick={() => handleMarkerButtonClick(marker)}>
+                                            Click
+                                        </button>
+                                    </div>
+                                </Popup>
+                            </Marker>
+                        ))}
+
             </MarkerClusterGroup>
             
-            {/* {markers.map(marker =>  (
-                <Marker key = {marker.id}
-                position={new latLng(marker.latitude, marker.longitude)}
-                icon={markerIcon}>
-                <Popup>{marker.name}</Popup>
-                </Marker>
-            ))} */}
+            
             </MapContainer>
             </div>
         </div>
