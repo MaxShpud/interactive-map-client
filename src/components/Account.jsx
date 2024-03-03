@@ -9,9 +9,10 @@ import './Home.css'
 
 const Account = ({theme, setTheme}) => {
 
-    const [userData, setUserData] = useContext(UserContext)
+    const [accountData, setAccountData] = useState(null)
     const navigate = useNavigate()
-    const token = localStorage.getItem('mapToken')
+    const [userData, setUserData] = useContext(UserContext)
+    //const token = localStorage.getItem('mapToken')
     const [editingField, setEditingField] = useState(null)
     const [editedValue, setEditedValue] = useState('')
     const [avatarUser, setAvatarUser] = useState(null)
@@ -22,36 +23,33 @@ const Account = ({theme, setTheme}) => {
             try {
                 const response = await fetch('/api/user/current', {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${userData.token}`
                     }
                 })
+                console.log(response)
                 if (response.ok) {
                     const data = await response.json()
-                    setUserData(data);
-                    console.log(data)
+                    setAccountData(data);
                 } else {
                     console.error('Failed to fetch user data')
-                    navigate('/', { replace: true })
+                    // navigate('/', { replace: true });
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error)
             }
         }
+        fetchUserData();
+    }, [userData.token, navigate, setAccountData])
 
-        if (token) {
-            fetchUserData()
-        } else {
-            navigate('/', { replace: true })
-        }
-    }, [token, navigate])
-
-    if (!token) {
+    console.log("TOKEN", userData.token)
+    console.log("ACC", accountData)
+    if (!userData.token) {
         navigate('/', {replace: true})
     }
 
     const handleEditClick = (field) => {
         setEditingField(field)
-        setEditedValue(userData[field])
+        setEditedValue(accountData[field])
     }
 
     const handleFileInputChange = (event) => {
@@ -69,7 +67,7 @@ const Account = ({theme, setTheme}) => {
                 method: 'POST',
                 headers: {
                     // 'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${userData.token}`
                 },
                 body: formData
             }) 
@@ -77,7 +75,7 @@ const Account = ({theme, setTheme}) => {
             if (response.ok) {
                 
                 const updatedUserData = await response.json()
-                setUserData(updatedUserData)
+                setAccountData(updatedUserData)
                 setEditingField(null)
                 
             } else {
@@ -89,11 +87,11 @@ const Account = ({theme, setTheme}) => {
     }
     const handleSaveClick = async () => {
         try {
-            const response = await fetch(`/api/user?user_id=${userData.id}`, {
+            const response = await fetch(`/api/user?user_id=${accountData.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${userData.token}`
                 },
                 body: JSON.stringify({ [editingField]: editedValue })
             })
@@ -101,7 +99,7 @@ const Account = ({theme, setTheme}) => {
             if (response.ok) {
                 
                 const updatedUserData = await response.json()
-                setUserData(updatedUserData)
+                setAccountData(updatedUserData)
                 setEditingField(null)
                 
             } else {
@@ -112,18 +110,17 @@ const Account = ({theme, setTheme}) => {
         }
     };
 
-    if (!userData) {
+    if (!accountData) {
         return null
     }
-    console.log(avatarUser)
     return (
         
         <div className={`container ${theme}`}>
             <NavBar theme={theme} setTheme={setTheme}/>
             <div className="account-items">
                 <div className="account-picture">
-                    {userData.photo_base64 && (
-                        <img src={`data:image/jpeg;base64,${userData.photo_base64}`} alt="User" />
+                    {accountData.photo_base64 && (
+                        <img src={`data:image/jpeg;base64,${accountData.photo_base64}`} alt="User" />
                     )}
                     <div className="uploadSection">
                         <h2>Update the photo</h2>
@@ -140,7 +137,7 @@ const Account = ({theme, setTheme}) => {
                     <h2 className="account-card-title">Account Information</h2>
                     <div className="account-info">
                         <label>Email:</label>
-                        <p>{userData.email}</p>
+                        <p>{accountData.email}</p>
                     </div>
                     <div className="account-info">
                         <label>Name:</label>
@@ -152,7 +149,7 @@ const Account = ({theme, setTheme}) => {
                             />
                         ) : (
                             <>
-                                <p>{userData.name}</p>
+                                <p>{accountData.name}</p>
                                 <span onClick={() => handleEditClick('name')}>Edit</span>
                             </>
                         )}
@@ -167,9 +164,9 @@ const Account = ({theme, setTheme}) => {
                             />
                         ) : (
                             <>
-                                {userData.surname ? (
+                                {accountData.surname ? (
                                     <>
-                                        <p>{userData.surname}</p>
+                                        <p>{accountData.surname}</p>
                                         <span onClick={() => handleEditClick('surname')}>Edit</span>
                                     </>
                                 ) : (
@@ -191,9 +188,9 @@ const Account = ({theme, setTheme}) => {
                             />
                         ) : (
                             <>
-                                {userData.phone_number ? (
+                                {accountData.phone_number ? (
                                     <>
-                                        <p>{userData.phone_number}</p>
+                                        <p>{accountData.phone_number}</p>
                                         <span onClick={() => handleEditClick('phone_number')}>Edit</span>
                                     </>
                                 ) : (
@@ -215,9 +212,9 @@ const Account = ({theme, setTheme}) => {
                             />
                         ) : (
                             <>
-                                {userData.about_me ? (
+                                {accountData.about_me ? (
                                     <>
-                                        <p>{userData.about_me}</p>
+                                        <p>{accountData.about_me}</p>
                                         <span onClick={() => handleEditClick('about_me')}>Edit</span>
                                     </>
                                 ) : (

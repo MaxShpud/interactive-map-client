@@ -17,6 +17,7 @@ import natural_reserve_icon from '../../assets/markers/natural_reserve.svg'
 import nature_icon from '../../assets/markers/nature.svg'
 import religion_icon from '../../assets/markers/religion.svg'
 import war_monument_icon from '../../assets/markers/war_monument.svg'
+import CustomCarousel from "../custom_courusel/CustomCarousel";
 
 const MapTemplate = ({token}) => {
 
@@ -45,6 +46,7 @@ const MapTemplate = ({token}) => {
 
         fetchMarkers();
     }, []);
+
     const createCustomClusterIcon = (cluster) => {
         return new divIcon({
             html: `<div class="cluster-icon">${cluster.getChildCount()}</div>`,
@@ -119,13 +121,14 @@ const MapTemplate = ({token}) => {
             [markerId]: !prevState[markerId],
         }));
     };
+    console.log("MARKERS", markers)
 
     return(
         <div className="map-items">
             <MapContainer center={[53.7169415, 27.9775789]} zoom={7} >
 
             <TileLayer
-                // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MarkerClusterGroup
@@ -134,10 +137,10 @@ const MapTemplate = ({token}) => {
             >
                 {markers.map((marker, index) => (
                             <Marker key={index} position={marker.coordinates} icon={getMarkerIcon(marker.type)} className="marker-cn">
-                                <Popup onClick={(e) => e.stopPropagation()}>
+                                <Popup className="custom-popup" onClick={(e) => e.stopPropagation()}>
                                 <div className="popup-content">
                                         <div className="marker-info">
-                                            {marker.name}
+                                            <div className="marker-name">{marker.name}</div>
                                             <img
                                                 src={
                                                     marker.is_favourite
@@ -154,16 +157,21 @@ const MapTemplate = ({token}) => {
                                             />
                                         </div>
                                         {expandedPopups[marker.id] ? (
-                                        <>
-                                            {console.log("FULL", marker)}
-                                            <div>{marker.name}</div>
-                                            <div>{marker.coordinates}</div>
-                                            <div>{marker.location}</div>
-                                            <div>{marker.description}</div>
-                                            <button onClick={(e) => { e.stopPropagation(); togglePopupExpansion(marker.id)}}>Скрыть подробную информацию</button>
-                                        </>
+                                        <div className="marker-full-info">
+                                            
+                                            <CustomCarousel>
+                                                {marker.files_base64.map((image, index) => {
+                                                return <img key={index} src={`data:image/jpeg;base64,${image}`} alt={`Image ${index}`} />;
+                                                })}
+                                            </CustomCarousel>
+                                            <div className="marker-full-info">{marker.location}</div>
+                                            <div className="marker-full-info">{marker.coordinates.join(' ')}</div>
+                                            <div className="about-place">О месте</div>
+                                            <div className="marker-full-info">{marker.description}</div>
+                                            <button className="btn-marker" onClick={(e) => { e.stopPropagation(); togglePopupExpansion(marker.id)}}>Скрыть подробную информацию</button>
+                                        </div>
                                     ) : (
-                                        <button onClick={(e) =>{e.stopPropagation(); togglePopupExpansion(marker.id)}}>Узнать подробнее</button>
+                                        <button className="btn-marker" onClick={(e) =>{ e.stopPropagation(); togglePopupExpansion(marker.id)}}>Узнать подробнее</button>
                                     )}
                                     </div>
                                 </Popup>

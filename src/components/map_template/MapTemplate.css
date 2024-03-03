@@ -5,8 +5,8 @@
   }
 
 .leaflet-container{
-    height: 600px;
-    width: 90%;
+    height: 760px;
+    width: 100%;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -26,11 +26,16 @@
   font-size: 1rem;
 }
 
+.custom-popup {
+  max-width: 400px; /* Максимальная ширина Popup */
+  max-height: 600px;  
+}
 .popup-content {
-  height: fit-content;
-  width: fit-content;
+  height: auto;
+  width: auto;
   display: flex;
   flex-direction: column;
+  /* overflow: auto; */
   
 }
 
@@ -42,9 +47,8 @@
   margin-top: 10px;
   display: flex;
   align-items: center;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   font-size: 12px;
-  font-weight: bold;
 }
 
 .marker-info img {
@@ -57,8 +61,25 @@
 .popup-content button {
   margin-top: 10px;
   font-weight: bold;
+  align-items: center;
+  justify-content: center; 
 }
 
 .additional-popup {
     padding: 10px;
+}
+
+.marker-name{
+  font-size: 16px;
+  font-weight: bold;
+}
+.marker-full-info{
+  margin-top: 10px;
+}
+.about-place{
+  margin-top: 10px;
+  font-weight: bold;
+}
+.btn-marker{
+  width: 100%;
 }

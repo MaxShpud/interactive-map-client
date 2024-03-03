@@ -2,7 +2,7 @@ import './App.css'
 import React, {useContext, useEffect, useState} from "react"
 import { UserContext } from './context/UserContext'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { PageLogin, PageRegister, PageHome, PageAccount, PageMap } from './components/Pages'
+import { PageLogin, PageRegister, PageHome, PageAccount, PageMap, PageFavourite } from './components/Pages'
 
 const App = () => {
   const [message, setMessage] = useState("")
@@ -46,6 +46,7 @@ const App = () => {
               <Route path="home" element={<PageHome theme={theme} setTheme={setTheme}/>} />
               <Route path="account" element={<PageAccount theme={theme} setTheme={setTheme}/>} />
               <Route path="map" element={<PageMap theme={theme} setTheme={setTheme}/>} />
+              <Route path="favourite" element={<PageFavourite theme={theme} setTheme={setTheme}/>} />
         </Routes>
       </BrowserRouter>
     // <>

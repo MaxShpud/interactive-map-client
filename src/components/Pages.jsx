@@ -3,6 +3,7 @@ import SignIn from './auth/SignInForm.jsx'
 import Home from './Home.jsx'
 import Account from './Account.jsx'
 import Map from './map/Map.jsx'
+import Favourite from './favourite/Favourite.jsx'
 
 const BuildPage = (index) => (
     index  
@@ -13,3 +14,4 @@ export const PageRegister = ({theme, setTheme}) => BuildPage(<SighUp theme={them
 export const PageHome = ({theme, setTheme}) => BuildPage(<Home theme={theme} setTheme={setTheme}/>)
 export const PageAccount = ({theme, setTheme}) => BuildPage(<Account theme={theme} setTheme={setTheme}/>)
 export const PageMap = ({theme, setTheme}) => BuildPage(<Map theme={theme} setTheme={setTheme}/>)
+export const PageFavourite = ({theme, setTheme}) => BuildPage(<Favourite theme={theme} setTheme={setTheme}/>)
