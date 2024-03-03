@@ -26,12 +26,12 @@ const NavBar = ({theme, setTheme}) =>{
         <div className="navbar">
                 <img src={theme == 'light' ? logo_light: logo_dark} alt="" className="logo"/>
                 <ul>
-                    <li onClick={() => navigate('/home', {replace: true})}>Home</li>
-                    <li onClick={() => navigate('/map', {replace: true})}>Map</li>
-                    <li>Routes</li>
-                    <li>Favourites</li>
-                    <li onClick={() => navigate('/account', {replace: true})}>Account</li>
-                    {userData.userRole === 'ADMIN' && <li>Admin Panel</li>}
+                    <li onClick={() => navigate('/home', {replace: true})}>Главная</li>
+                    <li onClick={() => navigate('/map', {replace: true})}>Карта</li>
+                    <li>Маршруты</li>
+                    <li onClick={() => navigate('/favourite', {replace: true})}>Избранное</li>
+                    <li onClick={() => navigate('/account', {replace: true})}>Аккаунт</li>
+                    {userData.userRole === 'ADMIN' && <li>Панель администратора</li>}
                 </ul>
                 <div className="search-box">
                     <input type="text" placeholder="Search" />
