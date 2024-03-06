@@ -4,6 +4,7 @@ import ErrorMessage from "../ErrorMessage"
 import { UserContext } from "../../context/UserContext"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './SighInForm.css'
+import { Button } from '@mantine/core';
 
 const SignIn = ({theme, setTheme}) => {
   const [email, setEmail] = useState("")
@@ -78,10 +79,18 @@ const SignIn = ({theme, setTheme}) => {
         </div>
         <ErrorMessage message={errorMessage} />
         <br />
-        <button className="button is-primary" type="submit">
+        {/* <button className="button is-primary" type="submit">
           Log in
-        </button>
+        </button> */}
+        <Button
+          variant="gradient"
+          gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
+          type="submit"
+        >
+          Gradient button
+        </Button>
       </form>
+      
       <p className="has-text-centered">
         Don't have an account? <button onClick={() => navigate('register', {replace: false})}>Register here</button>
       </p>

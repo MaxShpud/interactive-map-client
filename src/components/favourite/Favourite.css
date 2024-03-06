@@ -1,50 +1,18 @@
-/* *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
-
-.container {
-    width: 100vw;
-    min-height: 100vh;
-    background: #ced8ff;
-    transition: 0.5s;
-}
-
-.container.dark{
-    background: #222;
-
-}
-
-.map-items {
-    margin-top: 20px;
-    display: flex; 
-    justify-content: space-between; 
-  } */
-
-/* .leaflet-container{
-    height: 600px;
-    width: 80%;
-    justify-content: center;
-    align-items: center;
-} */
-
 .split-container {
-    margin-top: 20px;
+    
     display: flex;
 }
 
 .locations {
     flex: 1;
-    margin: 0 10px;
-    background-color: #e64343;
+    margin: 10px;
+    background-color: #ffffff;
     border-radius: 10px;
 }
 
 .routes{
     flex: 1;
-    margin: 0 10px;
+    margin: 10px;
     background-color: #fff;
     border-radius: 10px;
 }
@@ -52,14 +20,13 @@
 .scrollable-content{
     margin-left: 5px;
     margin-right: 5px;
-    margin-top: 10px;
     margin-bottom: 10px;
     background-color: #dad8d8;
     border-radius: 10px;
 }
 
 .fav-object-content{
-    margin-top: 10px;
+   
     margin-bottom: 10px;
     height: auto;
   width: auto;
@@ -74,3 +41,11 @@
   cursor: pointer;
   margin-left: auto;
 }
+
+.card-holder{
+    margin: 10px;
+}
+
+
+
+  
