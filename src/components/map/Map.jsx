@@ -18,6 +18,7 @@ import nature_icon from '../../assets/markers/nature.svg'
 import religion_icon from '../../assets/markers/religion.svg'
 import war_monument_icon from '../../assets/markers/war_monument.svg'
 import MapTemplate from "../map_template/MapTemplate";
+import SearchBox from "../map_template/search_box/SearchBox";
 
 // const markerIcon = new Icon({
 //     iconUrl: fort_icon,
@@ -28,7 +29,7 @@ import MapTemplate from "../map_template/MapTemplate";
 const Map = ({theme, setTheme}) => {
     const [userData, setUserData] = useContext(UserContext)
     //const token = localStorage.getItem('mapToken')
-    
+    const [selectPosition, setSelectPosition] = useState(null);
 
     const location = useLocation()
     const navigate = useNavigate()
@@ -48,8 +49,9 @@ const Map = ({theme, setTheme}) => {
     return (
         <div className={`container ${theme}`}>
             <NavBar theme={theme} setTheme={setTheme}/>
+            <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition}/>
             <div className="map-template">
-                <MapTemplate token={userData.token}/>
+                <MapTemplate selectPosition={selectPosition}/>
             </div>
             
         </div>
