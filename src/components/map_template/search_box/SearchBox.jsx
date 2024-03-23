@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Button, List, ListItem, Image, Divider, Text, ThemeIcon } from '@mantine/core';
 import location_pin from '../../../assets/location-pin.png'
+import { useDebounce } from "@uidotdev/usehooks";
 
 const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search?";
 const params = {
@@ -14,69 +15,84 @@ const SearchBox = (props) =>{
   const { selectPosition, setSelectPosition } = props;
   const [searchText, setSearchText] = useState("");
   const [listPlace, setListPlace] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const debouncedSearchText = useDebounce(searchText, 300);
 
+  const handleChange = (event) => {
+    setSearchText(event.target.value);
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    setSearchText(formData.get("search"));
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (debouncedSearchText) {
+        setIsSearching(true);
+        const queryParams = {
+          q: debouncedSearchText,
+          format: "json",
+          addressdetails: 1,
+          polygon_geojson: 0,
+        };
+        const queryString = new URLSearchParams(queryParams).toString();
+        try {
+          const response = await fetch(`${NOMINATIM_BASE_URL}${queryString}`);
+          const data = await response.json();
+          setListPlace(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+        setIsSearching(false);
+      } else {
+        setListPlace([]);
+      }
+    };
+
+    fetchData();
+  }, [debouncedSearchText]);
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", paddingBlockStart: "10px" }}>
       <div style={{ display: "flex" }}>
         <div style={{ flex: 1 }}>
-          <Input
-            style={{ width: "100%" }}
-            value={searchText}
-            onChange={(event) => {
-              setSearchText(event.target.value);
-            }}
-          />
-        </div>
-        <div
-          style={{ display: "flex", alignItems: "center", padding: "0px 20px" }}
-        >
-          <Button
-            //variant="contained"
-            color="primary"
-            onClick={() => {
-              // Search
-              const params = {
-                q: searchText,
-                format: "json",
-                addressdetails: 1,
-                polygon_geojson: 0,
-              };
-              const queryString = new URLSearchParams(params).toString();
-              const requestOptions = {
-                method: "GET",
-                redirect: "follow",
-              };
-              fetch(`${NOMINATIM_BASE_URL}${queryString}`, requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                  console.log(JSON.parse(result));
-                  setListPlace(JSON.parse(result));
-                })
-                .catch((err) => console.log("err: ", err));
-            }}
-          >
-            Search
-          </Button>
+          <form onSubmit={handleSubmit}>
+            <Input
+              style={{ width: "100%" , flex: 1, marginRight: "10px" }}
+              name="search"
+              value={searchText}
+              onChange={handleChange}
+            />
+            <Button
+              variant="gradient"
+              gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
+              type="submit"
+              disabled={isSearching}
+            >
+              {isSearching ? "Searching..." : "Search"}
+            </Button>
+          </form>
         </div>
       </div>
       <div>
         <List component="nav" aria-label="main mailbox folders">
-          {listPlace.map((item) => {
-            return (
-              <div key={item?.place_id}>
-                
-                <Button
-                  onClick={() => {
-                    setSelectPosition(item);
-                  }}
-                >
-                  <Image height={30} width={30} src={location_pin}/>
-                  <Text>{item?.display_name}</Text> 
-                </Button>
-                <Divider />
-              </div>
-            );
-          })}
+          {listPlace.map((item) => (
+            <div key={item?.place_id} style={{ paddingBlockStart: "10px" }}>
+              <Button
+                variant="gradient"
+                gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
+                onClick={() => {
+                  setSelectPosition(item);
+                  setSearchText('');
+                }}
+              >
+                <Image height={30} width={30} src={location_pin} style={{ marginRight: "10px" }} />
+                <Text>{item?.display_name}</Text> 
+              </Button>
+              <Divider />
+            </div>
+          ))}
         </List>
       </div>
     </div>

@@ -28,7 +28,7 @@ const NavBar = ({theme, setTheme}) =>{
                 <ul>
                     <li onClick={() => navigate('/home', {replace: true})}>Главная</li>
                     <li onClick={() => navigate('/map', {replace: true})}>Карта</li>
-                    <li>Маршруты</li>
+                    <li onClick={() => navigate('/routes', {replace: true})}>Маршруты</li>
                     <li onClick={() => navigate('/favourite', {replace: true})}>Избранное</li>
                     <li onClick={() => navigate('/account', {replace: true})}>Аккаунт</li>
                     {userData.userRole === 'ADMIN' && <li>Панель администратора</li>}

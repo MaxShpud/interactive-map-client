@@ -86,7 +86,7 @@ const Favourite = ({theme, setTheme}) => {
                 <div className="locations">
                     <h2>Локации</h2>
                     <div className="cards">
-                    {favouriteObjects.map((favObject, index) => (
+                    {favouriteObjects && favouriteObjects.map((favObject, index) => (
                             <Card shadow="sm" padding="lg" radius="md" withBorder className="card-holder">
                                 <Group justify="space-between" mt="md" mb="xs">
                                     <Text  fw={500}>

@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap   } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet'
 import { UserContext } from "../../context/UserContext";
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import NavBar from "../navbar/NavBar";
-import {Icon, latLng, divIcon, point } from "leaflet"
+import {Icon, latLng, divIcon, point, Routing } from "leaflet"
 import "leaflet/dist/leaflet.css";
 import fort_icon from '../../assets/fort-icon-b.png'
 import "leaflet/dist/leaflet.css"
@@ -20,6 +20,8 @@ import religion_icon from '../../assets/markers/religion.svg'
 import war_monument_icon from '../../assets/markers/war_monument.svg'
 import CustomCarousel from "../custom_courusel/CustomCarousel";
 import location_pin from '../../assets/location-pin.png'
+import RoutingControl from './RoutingControl'
+
 
 const ResetCenterView = (props) => {
     const { selectPosition } = props;
@@ -29,7 +31,7 @@ const ResetCenterView = (props) => {
       if (selectPosition) {
         map.setView(
           latLng(selectPosition?.lat, selectPosition?.lon),
-          map.getZoom(3),
+          13,
           {
             animate: true
           }
@@ -40,14 +42,31 @@ const ResetCenterView = (props) => {
     return null;
   }
 
-const MapTemplate = ( props) => {
+// const AddRoute = () => {
+//     const map = useMap();
+//     useEffect(() => {
+//         Routing.Waypoint({
+//             waypoints: [
+//                 latLng(53.451232, 26.473042),
+//                 latLng(52.048022, 23.672885)
+//             ]
+//         })
+
+        
+//       }, );
+// }
+
+const MapTemplate =  (props, waypoints ) => {
 
     const [markers, setMarkers] = useState([]);
     const [expandedPopups, setExpandedPopups] = useState({});
     const [userData, setUserData] = useContext(UserContext)
     const { selectPosition } = props;
-    console.log("GETSTTSTS", selectPosition)
-    const locationSelection = [selectPosition?.lat, selectPosition?.lon];
+    const [route, setRoute] = useState(null);
+
+    const latitude = selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415;
+    const longitude = selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789;
+    const locationSelection = [latitude, longitude];
     
     
     useEffect(() => {
@@ -69,7 +88,7 @@ const MapTemplate = ( props) => {
                 console.error("Error fetching markers:", error);
             }
         };
-
+        console.log("MAPPAPAPAPA", waypoints)
         fetchMarkers();
     }, []);
 
@@ -153,12 +172,26 @@ const MapTemplate = ( props) => {
             [markerId]: !prevState[markerId],
         }));
     };
-    console.log("MARKERS", markers)
+    
+    useEffect(() => {
+        const latitude = selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415;
+        const longitude = selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789;
+        const locationSelection = [latitude, longitude];
+    
+        if (selectPosition) {
+            setRoute(null); 
+        }
+        
+    }, [selectPosition]);
 
     return(
         <div className="map-items">
-            <MapContainer center={[53.7169415, 27.9775789]} zoom={7} >
-
+            <MapContainer center={locationSelection ? locationSelection : [53.7169415, 27.9775789]} zoom={locationSelection ? 7 : 10}>
+            <ResetCenterView selectPosition={selectPosition} />
+            {/* <RoutingControl 
+                position={'topleft'} 
+                color={'#757de8'} 
+            /> */}
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -220,7 +253,7 @@ const MapTemplate = ( props) => {
                 </Popup>
                 </Marker>
             )}
-            <ResetCenterView selectPosition={selectPosition} />
+            
             </MapContainer>
             </div>
     )
