@@ -2,7 +2,7 @@ import './App.css'
 import React, {useContext, useEffect, useState} from "react"
 import { UserContext } from './context/UserContext'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { PageLogin, PageRegister, PageHome, PageAccount, PageMap, PageFavourite } from './components/Pages'
+import { PageLogin, PageRegister, PageHome, PageAccount, PageMap, PageFavourite, PageRoute } from './components/Pages'
 
 const App = () => {
   const [message, setMessage] = useState("")
@@ -47,27 +47,9 @@ const App = () => {
               <Route path="account" element={<PageAccount theme={theme} setTheme={setTheme}/>} />
               <Route path="map" element={<PageMap theme={theme} setTheme={setTheme}/>} />
               <Route path="favourite" element={<PageFavourite theme={theme} setTheme={setTheme}/>} />
+              <Route path="routes" element={<PageRoute theme={theme} setTheme={setTheme}/>} />
         </Routes>
       </BrowserRouter>
-    // <>
-    //   <Header title={message}/>
-    //   <div className="columns">
-    //     <div className="column"></div>
-    //     <div className="column m-5 is-two-thirds">
-    //       {
-    //         !token ? (
-    //           <div className="columns">
-    //             <Register/>
-    //             <Login/>
-    //           </div>
-    //         ): (
-    //           <p>Table</p>
-    //         )
-    //       }
-    //     </div>
-    //     <div className="column"></div>
-    //   </div>
-    // </>
   )
 }
 

@@ -4,6 +4,7 @@ import ErrorMessage from "../ErrorMessage"
 import { UserContext } from "../../context/UserContext"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './SighInForm.css'
+import { Button } from '@mantine/core';
 
 const SignIn = ({theme, setTheme}) => {
   const [email, setEmail] = useState("")
@@ -48,7 +49,7 @@ const SignIn = ({theme, setTheme}) => {
   return (
     <div className={`mainContainer ${theme}`}>
       <div className="titleContainer">
-        <h1>Login</h1>
+        <h1>Авторизация</h1>
       </div>
       
       <form className="box" onSubmit={handleSubmit}>
@@ -56,7 +57,7 @@ const SignIn = ({theme, setTheme}) => {
           <div className="control">
             <input
               type="email"
-              placeholder="Enter your email here"
+              placeholder="Введите email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="input"
@@ -68,7 +69,7 @@ const SignIn = ({theme, setTheme}) => {
           <div className="control">
             <input
               type="password"
-              placeholder="Enter your password here"
+              placeholder="Введите пароль"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input"
@@ -78,12 +79,20 @@ const SignIn = ({theme, setTheme}) => {
         </div>
         <ErrorMessage message={errorMessage} />
         <br />
-        <button className="button is-primary" type="submit">
+        {/* <button className="button is-primary" type="submit">
           Log in
-        </button>
+        </button> */}
+        <Button
+          variant="gradient"
+          gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
+          type="submit"
+        >
+          Авторизоваться
+        </Button>
       </form>
+      
       <p className="has-text-centered">
-        Don't have an account? <button onClick={() => navigate('register', {replace: false})}>Register here</button>
+        Нет аккаунта? <button onClick={() => navigate('register', {replace: false})}>Зарегистрируйтесь здесь</button>
       </p>
       <Outlet />
     </div>

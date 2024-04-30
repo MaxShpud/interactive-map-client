@@ -1,9 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup  } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet'
 import { UserContext } from "../../context/UserContext";
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import NavBar from "../navbar/NavBar";
-import {Icon, latLng, divIcon, point } from "leaflet"
+import {Icon, latLng, divIcon, point, Routing } from "leaflet"
+import "leaflet/dist/leaflet.css";
 import fort_icon from '../../assets/fort-icon-b.png'
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -18,18 +19,49 @@ import nature_icon from '../../assets/markers/nature.svg'
 import religion_icon from '../../assets/markers/religion.svg'
 import war_monument_icon from '../../assets/markers/war_monument.svg'
 import CustomCarousel from "../custom_courusel/CustomCarousel";
+import location_pin from '../../assets/location-pin.png'
+import RoutingControl from './RoutingControl'
 
-const MapTemplate = ({token}) => {
+
+const ResetCenterView = (props) => {
+    const { selectPosition } = props;
+    const map = useMap();
+  
+    useEffect(() => {
+      if (selectPosition) {
+        map.setView(
+          latLng(selectPosition?.lat, selectPosition?.lon),
+          13,
+          {
+            animate: true
+          }
+        )
+      }
+    }, [selectPosition]);
+  
+    return null;
+  }
+
+
+const MapTemplate =  (props) => {
 
     const [markers, setMarkers] = useState([]);
     const [expandedPopups, setExpandedPopups] = useState({});
+    const [userData, setUserData] = useContext(UserContext)
+    const { selectPosition } = props;
+    const [route, setRoute] = useState(null);
 
+    const latitude = selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415;
+    const longitude = selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789;
+    const locationSelection = [latitude, longitude];
+    
+    
     useEffect(() => {
         const fetchMarkers = async () => {
             try {
                 const response = await fetch("/api/object", {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${userData.token}`
                     }
                 });
                 if (response.ok) {
@@ -44,9 +76,13 @@ const MapTemplate = ({token}) => {
             }
         };
 
+        console.log("MAPPAPAPAPA", props.waypoints)
         fetchMarkers();
-    }, []);
+    }, [props.waypoints]);
 
+
+    
+      
     const createCustomClusterIcon = (cluster) => {
         return new divIcon({
             html: `<div class="cluster-icon">${cluster.getChildCount()}</div>`,
@@ -64,7 +100,7 @@ const MapTemplate = ({token}) => {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${userData.token}`
                 },
                 body: JSON.stringify({ is_favourite: !isFavourite })
             });
@@ -107,8 +143,11 @@ const MapTemplate = ({token}) => {
                 case "CULTURAL_SITES": 
                     iconUrl = cultural_site_icon
                     break
+                case "SEARCH":
+                    iconUrl = location_pin
+                    break
                 default:
-                    iconUrl = acrchitecture_icon
+                    iconUrl = location_pin
         }
         return new Icon({
             iconUrl: iconUrl,
@@ -121,64 +160,94 @@ const MapTemplate = ({token}) => {
             [markerId]: !prevState[markerId],
         }));
     };
-    console.log("MARKERS", markers)
+    
+    useEffect(() => {
+        const latitude = selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415;
+        const longitude = selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789;
+        const locationSelection = [latitude, longitude];
+    
+        if (selectPosition) {
+            setRoute(null); 
+        }
+        
+    }, [selectPosition]);
 
     return(
         <div className="map-items">
-            <MapContainer center={[53.7169415, 27.9775789]} zoom={7} >
-
+            <MapContainer center={locationSelection ? locationSelection : [53.7169415, 27.9775789]} zoom={locationSelection ? 7 : 10}>
+            <ResetCenterView selectPosition={selectPosition} />
+            {props.waypoints && 
+            <RoutingControl 
+                position={'topleft'} 
+                color={'#757de8'} 
+                waypoints={props.waypoints} 
+            />
+            }
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <MarkerClusterGroup
-            chunkedLoading 
-            iconCreateFunction={createCustomClusterIcon}
-            >
-                {markers.map((marker, index) => (
-                            <Marker key={index} position={marker.coordinates} icon={getMarkerIcon(marker.type)} className="marker-cn">
-                                <Popup className="custom-popup" onClick={(e) => e.stopPropagation()}>
-                                <div className="popup-content">
-                                        <div className="marker-info">
-                                            <div className="marker-name">{marker.name}</div>
-                                            <img
-                                                src={
-                                                    marker.is_favourite
-                                                        ? fav_selected
-                                                        : fav_unselected
-                                                }
-                                                alt="Favourite"
-                                                className="marker-photo"
-                                                onClick={(e) =>{e.stopPropagation();
-                                                    handleMarkerPhotoClick(
-                                                        marker
-                                                    )}
-                                                }
-                                            />
+            
+            {props.waypoints ? null : (
+                <MarkerClusterGroup
+                chunkedLoading 
+                iconCreateFunction={createCustomClusterIcon}
+                >
+                    {markers.map((marker, index) => (
+                                <Marker key={index} position={marker.coordinates} icon={getMarkerIcon(marker.type)} className="marker-cn">
+                                    <Popup className="custom-popup" onClick={(e) => e.stopPropagation()}>
+                                    <div className="popup-content">
+                                            <div className="marker-info">
+                                                <div className="marker-name">{marker.name}</div>
+                                                <img
+                                                    src={
+                                                        marker.is_favourite
+                                                            ? fav_selected
+                                                            : fav_unselected
+                                                    }
+                                                    alt="Favourite"
+                                                    className="marker-photo"
+                                                    onClick={(e) =>{e.stopPropagation();
+                                                        handleMarkerPhotoClick(
+                                                            marker
+                                                        )}
+                                                    }
+                                                />
+                                            </div>
+                                            {expandedPopups[marker.id] ? (
+                                            <div className="marker-full-info">
+                                                
+                                                <CustomCarousel>
+                                                    {marker.files_base64.map((image, index) => {
+                                                    return <img key={index} src={`data:image/jpeg;base64,${image}`} alt={`Image ${index}`} />;
+                                                    })}
+                                                </CustomCarousel>
+                                                <div className="marker-full-info">{marker.location}</div>
+                                                <div className="marker-full-info">{marker.coordinates.join(' ')}</div>
+                                                <div className="about-place">О месте</div>
+                                                <div className="marker-full-info">{marker.description}</div>
+                                                <button className="btn-marker" onClick={(e) => { e.stopPropagation(); togglePopupExpansion(marker.id)}}>Скрыть подробную информацию</button>
+                                            </div>
+                                        ) : (
+                                            <button className="btn-marker" onClick={(e) =>{ e.stopPropagation(); togglePopupExpansion(marker.id)}}>Узнать подробнее</button>
+                                        )}
                                         </div>
-                                        {expandedPopups[marker.id] ? (
-                                        <div className="marker-full-info">
-                                            
-                                            <CustomCarousel>
-                                                {marker.files_base64.map((image, index) => {
-                                                return <img key={index} src={`data:image/jpeg;base64,${image}`} alt={`Image ${index}`} />;
-                                                })}
-                                            </CustomCarousel>
-                                            <div className="marker-full-info">{marker.location}</div>
-                                            <div className="marker-full-info">{marker.coordinates.join(' ')}</div>
-                                            <div className="about-place">О месте</div>
-                                            <div className="marker-full-info">{marker.description}</div>
-                                            <button className="btn-marker" onClick={(e) => { e.stopPropagation(); togglePopupExpansion(marker.id)}}>Скрыть подробную информацию</button>
-                                        </div>
-                                    ) : (
-                                        <button className="btn-marker" onClick={(e) =>{ e.stopPropagation(); togglePopupExpansion(marker.id)}}>Узнать подробнее</button>
-                                    )}
-                                    </div>
-                                </Popup>
-                            </Marker>
-                        ))}
+                                    </Popup>
+                                </Marker>
+                            ))}
 
-            </MarkerClusterGroup>
+                </MarkerClusterGroup>
+            )}
+            
+            
+            {selectPosition && (
+                <Marker position={locationSelection} icon={getMarkerIcon("SEARCH")}>
+                <Popup>
+                    {selectPosition.display_name}
+                </Popup>
+                </Marker>
+            )}
+            
             </MapContainer>
             </div>
     )
