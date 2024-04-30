@@ -24,7 +24,7 @@ const NavBar = ({theme, setTheme}) =>{
     }
     return(
         <div className="navbar">
-                <img src={theme == 'light' ? logo_light: logo_dark} alt="" className="logo"/>
+                <img src={theme == 'light' ? logo_light: logo_dark} alt="" className="logo" onClick={() => navigate('/home', {replace: true})}/>
                 <ul>
                     <li onClick={() => navigate('/home', {replace: true})}>Главная</li>
                     <li onClick={() => navigate('/map', {replace: true})}>Карта</li>
@@ -33,10 +33,10 @@ const NavBar = ({theme, setTheme}) =>{
                     <li onClick={() => navigate('/account', {replace: true})}>Аккаунт</li>
                     {userData.userRole === 'ADMIN' && <li>Панель администратора</li>}
                 </ul>
-                <div className="search-box">
+                {/* <div className="search-box">
                     <input type="text" placeholder="Search" />
                     <img src={theme == 'light' ? search_icon_light: search_icon_dark} alt="" />
-                </div>
+                </div> */}
 
                 <img onClick={()=>{toggle_mode()}} src={theme == 'light' ? toggle_light: toggle_dark} alt="" className="toggle-icon"/>
                 {userData.token && (<img onClick={handleLogout} src={theme == 'light' ? logout_light: logout_dark} alt="" className="logout"/>)}

@@ -23,7 +23,7 @@ const params = {
 
 
 
-const CardRoute = ({ updateWaypoints }) => {
+const CardRoute = ({ updateWaypoints }) => {  
     const [modalOpen, setModalOpen] = useState(false);
     const [newCardContent, setNewCardContent] = useState("");
     const [cards, setCards] = useState([])
@@ -126,7 +126,7 @@ const CardRoute = ({ updateWaypoints }) => {
                     ))
                 )}
             <Button onClick={openModal} >
-                Добавить карточку
+                Добавить локацию
             </Button>
             <Button disabled={routeDisabled} onClick={handleCreateRoute} style={{ marginTop: "10px", border: "10px" }}>
                  Создать маршрут

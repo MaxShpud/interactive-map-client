@@ -49,12 +49,12 @@ const SighUp = ({theme, setTheme}) => {
     return (
         <div className={`column ${theme}`}>
             <form className="box" onSubmit={handleSubmit}>
-                <h1 className="title has-text-centered">Register</h1>
+                <h1 className="title has-text-centered">Регистрация</h1>
                 <div className="field">
-                    <label className="label">Name</label>
+                    <label className="label">Имя</label>
                     <div className="control">
                         <input type="text" 
-                        placeholder="Enter your name" 
+                        placeholder="Введите имя" 
                         value={name} 
                         onChange={(e) => setName(e.target.value)}
                         className="input"
@@ -62,10 +62,10 @@ const SighUp = ({theme, setTheme}) => {
                     </div>
                 </div>
                 <div className="field">
-                    <label className="label">Surname</label>
+                    <label className="label">Фамилия</label>
                     <div className="control">
                         <input type="text" 
-                        placeholder="Enter your surname" 
+                        placeholder="Введите фамилию" 
                         value={surname} 
                         onChange={(e) => setSurname(e.target.value)}
                         className="input"
@@ -73,10 +73,10 @@ const SighUp = ({theme, setTheme}) => {
                     </div>
                 </div>
                 <div className="field">
-                    <label className="label">Email Adress</label>
+                    <label className="label">Email</label>
                     <div className="control">
                         <input type="email" 
-                        placeholder="Enter email" 
+                        placeholder="Введите email" 
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)}
                         className="input"
@@ -84,10 +84,10 @@ const SighUp = ({theme, setTheme}) => {
                     </div>
                 </div>
                 <div className="field">
-                    <label className="label">Password</label>
+                    <label className="label">Пароль</label>
                     <div className="control">
                         <input type="password" 
-                        placeholder="Enter password" 
+                        placeholder="Введите пароль" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)}
                         className="input"
@@ -96,7 +96,7 @@ const SighUp = ({theme, setTheme}) => {
                 </div>
                 <ErrorMessage message={errorMessage} />
                 <br/>
-                <button className="button is-primary" type="submit">Register</button>
+                <button className="button is-primary" type="submit">Зарегистрироваться</button>
                 <hr />
                 <Outlet />
             </form>

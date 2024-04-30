@@ -9,7 +9,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <MantineProvider>
       <UserProvider>
       <App />
-      </UserProvider>,
+      </UserProvider>
   </MantineProvider>
   
 )

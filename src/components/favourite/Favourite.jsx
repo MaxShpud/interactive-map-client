@@ -84,7 +84,7 @@ const Favourite = ({theme, setTheme}) => {
             <NavBar theme={theme} setTheme={setTheme}/>
             <div className="split-container">
                 <div className="locations">
-                    <h2>Локации</h2>
+                    <h2>Locations</h2>
                     <div className="cards">
                     {favouriteObjects && favouriteObjects.map((favObject, index) => (
                             <Card shadow="sm" padding="lg" radius="md" withBorder className="card-holder">

@@ -28,7 +28,7 @@ const Route = ({theme, setTheme}) => {
     useEffect(() => {
         console.log('Current location is ', location)
         console.log("ROUTEROYUTEm" ,waypoints)
-    }, [location])
+    }, [location, waypoints])
 
     if (!userData.token) {
         
@@ -46,7 +46,7 @@ const Route = ({theme, setTheme}) => {
             </div>
             <div style={{ flex: '3' , zIndex:1}}>
               <div className="map-template">
-                <MapTemplate selectPosition={selectPosition}  waypoints={waypoints}/>
+              <MapTemplate key={JSON.stringify(waypoints)} selectPosition={selectPosition} waypoints={waypoints}/>
               </div>
             </div>
           </div>

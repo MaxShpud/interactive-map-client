@@ -42,21 +42,8 @@ const ResetCenterView = (props) => {
     return null;
   }
 
-// const AddRoute = () => {
-//     const map = useMap();
-//     useEffect(() => {
-//         Routing.Waypoint({
-//             waypoints: [
-//                 latLng(53.451232, 26.473042),
-//                 latLng(52.048022, 23.672885)
-//             ]
-//         })
 
-        
-//       }, );
-// }
-
-const MapTemplate =  (props, waypoints ) => {
+const MapTemplate =  (props) => {
 
     const [markers, setMarkers] = useState([]);
     const [expandedPopups, setExpandedPopups] = useState({});
@@ -88,9 +75,10 @@ const MapTemplate =  (props, waypoints ) => {
                 console.error("Error fetching markers:", error);
             }
         };
-        console.log("MAPPAPAPAPA", waypoints)
+
+        console.log("MAPPAPAPAPA", props.waypoints)
         fetchMarkers();
-    }, []);
+    }, [props.waypoints]);
 
 
     
@@ -188,63 +176,69 @@ const MapTemplate =  (props, waypoints ) => {
         <div className="map-items">
             <MapContainer center={locationSelection ? locationSelection : [53.7169415, 27.9775789]} zoom={locationSelection ? 7 : 10}>
             <ResetCenterView selectPosition={selectPosition} />
-            {/* <RoutingControl 
+            {props.waypoints && 
+            <RoutingControl 
                 position={'topleft'} 
                 color={'#757de8'} 
-            /> */}
+                waypoints={props.waypoints} 
+            />
+            }
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             
-            <MarkerClusterGroup
-            chunkedLoading 
-            iconCreateFunction={createCustomClusterIcon}
-            >
-                {markers.map((marker, index) => (
-                            <Marker key={index} position={marker.coordinates} icon={getMarkerIcon(marker.type)} className="marker-cn">
-                                <Popup className="custom-popup" onClick={(e) => e.stopPropagation()}>
-                                <div className="popup-content">
-                                        <div className="marker-info">
-                                            <div className="marker-name">{marker.name}</div>
-                                            <img
-                                                src={
-                                                    marker.is_favourite
-                                                        ? fav_selected
-                                                        : fav_unselected
-                                                }
-                                                alt="Favourite"
-                                                className="marker-photo"
-                                                onClick={(e) =>{e.stopPropagation();
-                                                    handleMarkerPhotoClick(
-                                                        marker
-                                                    )}
-                                                }
-                                            />
+            {props.waypoints ? null : (
+                <MarkerClusterGroup
+                chunkedLoading 
+                iconCreateFunction={createCustomClusterIcon}
+                >
+                    {markers.map((marker, index) => (
+                                <Marker key={index} position={marker.coordinates} icon={getMarkerIcon(marker.type)} className="marker-cn">
+                                    <Popup className="custom-popup" onClick={(e) => e.stopPropagation()}>
+                                    <div className="popup-content">
+                                            <div className="marker-info">
+                                                <div className="marker-name">{marker.name}</div>
+                                                <img
+                                                    src={
+                                                        marker.is_favourite
+                                                            ? fav_selected
+                                                            : fav_unselected
+                                                    }
+                                                    alt="Favourite"
+                                                    className="marker-photo"
+                                                    onClick={(e) =>{e.stopPropagation();
+                                                        handleMarkerPhotoClick(
+                                                            marker
+                                                        )}
+                                                    }
+                                                />
+                                            </div>
+                                            {expandedPopups[marker.id] ? (
+                                            <div className="marker-full-info">
+                                                
+                                                <CustomCarousel>
+                                                    {marker.files_base64.map((image, index) => {
+                                                    return <img key={index} src={`data:image/jpeg;base64,${image}`} alt={`Image ${index}`} />;
+                                                    })}
+                                                </CustomCarousel>
+                                                <div className="marker-full-info">{marker.location}</div>
+                                                <div className="marker-full-info">{marker.coordinates.join(' ')}</div>
+                                                <div className="about-place">О месте</div>
+                                                <div className="marker-full-info">{marker.description}</div>
+                                                <button className="btn-marker" onClick={(e) => { e.stopPropagation(); togglePopupExpansion(marker.id)}}>Скрыть подробную информацию</button>
+                                            </div>
+                                        ) : (
+                                            <button className="btn-marker" onClick={(e) =>{ e.stopPropagation(); togglePopupExpansion(marker.id)}}>Узнать подробнее</button>
+                                        )}
                                         </div>
-                                        {expandedPopups[marker.id] ? (
-                                        <div className="marker-full-info">
-                                            
-                                            <CustomCarousel>
-                                                {marker.files_base64.map((image, index) => {
-                                                return <img key={index} src={`data:image/jpeg;base64,${image}`} alt={`Image ${index}`} />;
-                                                })}
-                                            </CustomCarousel>
-                                            <div className="marker-full-info">{marker.location}</div>
-                                            <div className="marker-full-info">{marker.coordinates.join(' ')}</div>
-                                            <div className="about-place">О месте</div>
-                                            <div className="marker-full-info">{marker.description}</div>
-                                            <button className="btn-marker" onClick={(e) => { e.stopPropagation(); togglePopupExpansion(marker.id)}}>Скрыть подробную информацию</button>
-                                        </div>
-                                    ) : (
-                                        <button className="btn-marker" onClick={(e) =>{ e.stopPropagation(); togglePopupExpansion(marker.id)}}>Узнать подробнее</button>
-                                    )}
-                                    </div>
-                                </Popup>
-                            </Marker>
-                        ))}
+                                    </Popup>
+                                </Marker>
+                            ))}
 
-            </MarkerClusterGroup>
+                </MarkerClusterGroup>
+            )}
+            
             
             {selectPosition && (
                 <Marker position={locationSelection} icon={getMarkerIcon("SEARCH")}>

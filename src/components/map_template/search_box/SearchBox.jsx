@@ -90,7 +90,7 @@ const SearchBox = (props) =>{
                 <Image height={30} width={30} src={location_pin} style={{ marginRight: "10px" }} />
                 <Text>{item?.display_name}</Text> 
               </Button>
-              <Divider />
+              <Divider/>
             </div>
           ))}
         </List>
