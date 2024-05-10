@@ -83,3 +83,15 @@
 .btn-marker{
   width: 100%;
 }
+.map-container {
+  position: relative;
+}
+.search-input-container {
+  position: absolute;
+  top: 20px; /* регулируйте значение top и right в зависимости от вашего предпочтения */
+  right: 20px;
+}
+
+.search-input {
+  width: 200px; /* задайте ширину поля ввода по вашему усмотрению */
+}

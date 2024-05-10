@@ -20,7 +20,8 @@ const Route = ({theme, setTheme}) => {
     const navigate = useNavigate()
 
     const [waypoints, setWaypoints] = useState([]);
-    
+    const [createdLength, setCreatedLength] = useState("")
+
     const updateWaypoints = (newWaypoints) => {
       setWaypoints(newWaypoints);
     };
@@ -35,18 +36,16 @@ const Route = ({theme, setTheme}) => {
         navigate('/', {replace: true})
     }
     
-    
-
     return (
         <div className={`container ${theme}`}>
           <NavBar theme={theme} setTheme={setTheme}/>
           <div style={{ display: 'flex' }}>
             <div style={{ flex: '1' , zIndex:2}}>
-              <CardRoute updateWaypoints={updateWaypoints}/>
+              <CardRoute updateWaypoints={updateWaypoints} createdLength={createdLength}/>
             </div>
             <div style={{ flex: '3' , zIndex:1}}>
               <div className="map-template">
-              <MapTemplate key={JSON.stringify(waypoints)} selectPosition={selectPosition} waypoints={waypoints}/>
+              <MapTemplate key={JSON.stringify(waypoints)} selectPosition={selectPosition} waypoints={waypoints} setCreatedRoute={setCreatedLength}/>
               </div>
             </div>
           </div>
