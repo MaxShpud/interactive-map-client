@@ -6,7 +6,6 @@ import NavBar from "../navbar/NavBar";
 import {Icon, latLng, divIcon, point, Routing } from "leaflet"
 import "leaflet/dist/leaflet.css";
 import fort_icon from '../../assets/fort-icon-b.png'
-import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from "react-leaflet-cluster";
 import "./MapTemplate.css"
 import fav_unselected from '../../assets/favourite_unselected.png'
@@ -21,7 +20,6 @@ import war_monument_icon from '../../assets/markers/war_monument.svg'
 import CustomCarousel from "../custom_courusel/CustomCarousel";
 import location_pin from '../../assets/location-pin.png'
 import RoutingControl from './RoutingControl'
-
 
 const ResetCenterView = (props) => {
     const { selectPosition } = props;
@@ -50,11 +48,12 @@ const MapTemplate =  (props) => {
     const [userData, setUserData] = useContext(UserContext)
     const { selectPosition } = props;
     const [route, setRoute] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(null);
 
     const latitude = selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415;
     const longitude = selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789;
     const locationSelection = [latitude, longitude];
-    
+    const [searchQuery, setSearchQuery] = useState('');
     
     useEffect(() => {
         const fetchMarkers = async () => {
@@ -172,28 +171,47 @@ const MapTemplate =  (props) => {
         
     }, [selectPosition]);
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+      };
+    const filteredMarkers = markers.filter((marker) =>
+      marker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      marker.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     return(
         <div className="map-items">
+            
             <MapContainer center={locationSelection ? locationSelection : [53.7169415, 27.9775789]} zoom={locationSelection ? 7 : 10}>
+            
             <ResetCenterView selectPosition={selectPosition} />
             {props.waypoints && 
             <RoutingControl 
                 position={'topleft'} 
+                waypoints={props.waypoints}
+                setCreatedRoute={props.setCreatedRoute}
                 color={'#757de8'} 
-                waypoints={props.waypoints} 
             />
             }
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            
+            <div className="search-input-container" style = {{zIndex: 3}}>
+                <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Поиск по маркерам"
+                className="search-input"
+                />
+            </div>
             {props.waypoints ? null : (
                 <MarkerClusterGroup
                 chunkedLoading 
                 iconCreateFunction={createCustomClusterIcon}
                 >
-                    {markers.map((marker, index) => (
+                    {filteredMarkers.map((marker, index) => (
+                    // {markers.map((marker, index) => (
                                 <Marker key={index} position={marker.coordinates} icon={getMarkerIcon(marker.type)} className="marker-cn">
                                     <Popup className="custom-popup" onClick={(e) => e.stopPropagation()}>
                                     <div className="popup-content">
@@ -237,15 +255,6 @@ const MapTemplate =  (props) => {
                             ))}
 
                 </MarkerClusterGroup>
-            )}
-            
-            
-            {selectPosition && (
-                <Marker position={locationSelection} icon={getMarkerIcon("SEARCH")}>
-                <Popup>
-                    {selectPosition.display_name}
-                </Popup>
-                </Marker>
             )}
             
             </MapContainer>

@@ -12,7 +12,6 @@ const Header = ({ title }) => {
         <div className="has-text-centered m-6">
             <h1 className="title">{title}</h1>
             {token && (<button className="button" onClick={handleLogout}>Logout</button>)}
-
         </div>
     )
 }

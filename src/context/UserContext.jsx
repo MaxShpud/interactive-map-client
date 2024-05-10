@@ -19,7 +19,7 @@ export const UserProvider = (props) => {
         },
       };
 
-      const response = await fetch("/api/user/me", requestOptions)
+      const response = await fetch("/user/me", requestOptions)
   
       if (!response.ok) {
         setUserData({ token: null, userRole: null });
