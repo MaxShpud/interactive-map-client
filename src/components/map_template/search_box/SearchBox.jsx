@@ -65,10 +65,9 @@ const SearchBox = (props) =>{
               onChange={handleChange}
             />
             <Button
-              variant="gradient"
-              gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
               type="submit"
               disabled={isSearching}
+              style={{ marginTop: "10px", border: "10px", textAlign: "center"}}
             >
               {isSearching ? "Searching..." : "Search"}
             </Button>
@@ -80,12 +79,11 @@ const SearchBox = (props) =>{
           {listPlace.map((item) => (
             <div key={item?.place_id} style={{ paddingBlockStart: "10px" }}>
               <Button
-                variant="gradient"
-                gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
                 onClick={() => {
                   setSelectPosition(item);
                   setSearchText('');
                 }}
+                style={{ marginTop: "10px", border: "10px" }}
               >
                 <Image height={30} width={30} src={location_pin} style={{ marginRight: "10px" }} />
                 <Text>{item?.display_name}</Text> 

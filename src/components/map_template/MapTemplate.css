@@ -2,6 +2,7 @@
     margin-top: 20px;
     display: flex; 
     justify-content: space-between; 
+    z-index: 1;
   }
 
 .leaflet-container{
@@ -95,3 +96,7 @@
 .search-input {
   width: 200px; /* задайте ширину поля ввода по вашему усмотрению */
 }
+
+.leaflet-control { z-index: 0 !important}
+.leaflet-pane { z-index: 0 !important}
+.leaflet-top, .leaflet-bottom {z-index: 0 !important}

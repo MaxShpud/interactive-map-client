@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline  } from 'react-leaflet'
 import { UserContext } from "../../context/UserContext";
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import NavBar from "../navbar/NavBar";
@@ -20,7 +20,22 @@ import war_monument_icon from '../../assets/markers/war_monument.svg'
 import CustomCarousel from "../custom_courusel/CustomCarousel";
 import location_pin from '../../assets/location-pin.png'
 import RoutingControl from './RoutingControl'
+import { Card, Image, Text, Badge, Button, Group, createTheme, MantineProvider, Input, CloseButton, Modal, List, Divider, TextInput, Notification,
+    rem,
+    LoadingOverlay, Select
+     } from '@mantine/core';
+     import { useDebounce } from "@uidotdev/usehooks";
 
+
+const  MARKERS_TYPES = [
+    { label: "Архитектура", value: "ARCHITECTURE" },
+    { label: "Заповедные территории", value: "NATURAL_RESERVER" },
+    { label: "Религия", value: "RELIGION" },
+    { label: "Природа", value: "NATURE" },
+    { label: "Музеи", value: "MUSEUMS" },
+    { label: "Памятники войны", value: "WAR_MONUMENTS" },
+    { label: "Культурные объекты", value: "CULTURAL_SITES" }
+    ];     
 const ResetCenterView = (props) => {
     const { selectPosition } = props;
     const map = useMap();
@@ -42,19 +57,26 @@ const ResetCenterView = (props) => {
 
 
 const MapTemplate =  (props) => {
-
+    
+    const searchParams = new URLSearchParams(location.search);
     const [markers, setMarkers] = useState([]);
     const [expandedPopups, setExpandedPopups] = useState({});
     const [userData, setUserData] = useContext(UserContext)
     const { selectPosition } = props;
     const [route, setRoute] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
+    const param1 = searchParams.get('lat');
+    const param2 = searchParams.get('lon');
+    const param3 = searchParams.get('name');
 
-    const latitude = selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415;
-    const longitude = selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789;
+    const latitude = param1 !== null ? parseFloat(param1) : (selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415);
+    const longitude = param2 !== null ? parseFloat(param2) : (selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789);
     const locationSelection = [latitude, longitude];
     const [searchQuery, setSearchQuery] = useState('');
-    
+    const [selectedType, setSelectedType] = useState(null);
+
+
+
     useEffect(() => {
         const fetchMarkers = async () => {
             try {
@@ -80,7 +102,7 @@ const MapTemplate =  (props) => {
     }, [props.waypoints]);
 
 
-    
+   
       
     const createCustomClusterIcon = (cluster) => {
         return new divIcon({
@@ -161,8 +183,8 @@ const MapTemplate =  (props) => {
     };
     
     useEffect(() => {
-        const latitude = selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415;
-        const longitude = selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789;
+        const latitude = param1 !== null ? parseFloat(param1) : (selectPosition?.lat !== undefined ? selectPosition.lat : 53.7169415);
+    const longitude = param2 !== null ? parseFloat(param2) : (selectPosition?.lon !== undefined ? selectPosition.lon : 27.9775789);
         const locationSelection = [latitude, longitude];
     
         if (selectPosition) {
@@ -175,13 +197,25 @@ const MapTemplate =  (props) => {
         setSearchQuery(e.target.value);
       };
     const filteredMarkers = markers.filter((marker) =>
-      marker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      marker.description.toLowerCase().includes(searchQuery.toLowerCase())
+        ((selectedType ? marker.type === selectedType : true) &&
+  (marker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  marker.description.toLowerCase().includes(searchQuery.toLowerCase())))
     );
+    const handleTypeChange = (value) => {
+        setSelectedType(value);
+      };
+      
+// Выводим массив типов всех маркеров в консоль
+    // const filteredMarkersByType = markers.filter((marker) =>
+    //     marker.type === selectedType ||
+    //     marker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //     marker.description.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
+    
     return(
         <div className="map-items">
             
-            <MapContainer center={locationSelection ? locationSelection : [53.7169415, 27.9775789]} zoom={locationSelection ? 7 : 10}>
+            <MapContainer center={locationSelection ? locationSelection : [53.7169415, 27.9775789]} zoom={param1 && param2 ? 15 : (locationSelection ? 7 : 10)}>
             
             <ResetCenterView selectPosition={selectPosition} />
             {props.waypoints && 
@@ -197,12 +231,18 @@ const MapTemplate =  (props) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <div className="search-input-container" style = {{zIndex: 3}}>
-                <input
+                <Input
                 type="text"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                placeholder="Поиск по маркерам"
-                className="search-input"
+                placeholder="Поиск по названию"
+                />
+                <Select
+                placeholder="Фильтр по типу"
+                data={MARKERS_TYPES}
+                value={selectedType}
+                onChange={handleTypeChange}
+                style={{ marginTop: "10px", border: "10px" }}
                 />
             </div>
             {props.waypoints ? null : (
@@ -256,7 +296,6 @@ const MapTemplate =  (props) => {
 
                 </MarkerClusterGroup>
             )}
-            
             </MapContainer>
             </div>
     )

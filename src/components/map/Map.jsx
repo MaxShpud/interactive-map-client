@@ -19,6 +19,8 @@ import religion_icon from '../../assets/markers/religion.svg'
 import war_monument_icon from '../../assets/markers/war_monument.svg'
 import MapTemplate from "../map_template/MapTemplate";
 import SearchBox from "../map_template/search_box/SearchBox";
+import { Input, Button, List, ListItem, Image, Divider, Text, ThemeIcon, Modal } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 // const markerIcon = new Icon({
 //     iconUrl: fort_icon,
@@ -30,10 +32,11 @@ const Map = ({theme, setTheme}) => {
     const [userData, setUserData] = useContext(UserContext)
     //const token = localStorage.getItem('mapToken')
     const [selectPosition, setSelectPosition] = useState(null);
-
+    const [opened, { open, close }] = useDisclosure(false);
+    const [modalOpen, setModalOpen] = useState(false);
     const location = useLocation()
     const navigate = useNavigate()
-
+    const openModal = () => setModalOpen(true);
     
     
     useEffect(() => {
@@ -44,17 +47,32 @@ const Map = ({theme, setTheme}) => {
         
         navigate('/', {replace: true})
     }
-    
+    useEffect(() => {
+        if (selectPosition !== null) {
+            close();
+        }
+    }, [selectPosition, close]);
 
     return (
+        <>
+        <Modal className="modal" opened={opened} onClose={() => {
+              close();
+                }} title="Поиск локации" 
+                >
+                <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition}/>
+            </Modal>
         <div className={`container ${theme}`}>
+            
             <NavBar theme={theme} setTheme={setTheme}/>
-            <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition}/>
+            
+            <Button onClick={open} style={{ marginTop: "10px", border: "10px" }}>Найти локацию</Button>
             <div className="map-template">
                 <MapTemplate selectPosition={selectPosition}/>
             </div>
             
         </div>
+        </>
+        
     )
 }
 

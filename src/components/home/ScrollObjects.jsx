@@ -8,6 +8,7 @@ import { Input, Button, List, ListItem, Image, Divider, Text, ThemeIcon } from '
 
 const ScrollObjects = ({ cardArray }) => {
     const navigate = useNavigate()
+    const params = new URLSearchParams();
     useEffect(() => {
       if (cardArray && cardArray.length){
         const scrollContainer = document.querySelector(".gallery");
@@ -36,20 +37,18 @@ const ScrollObjects = ({ cardArray }) => {
     }, [cardArray]);
 
     if (!cardArray || !cardArray.length) {
-      return <div>No data available</div>;
+      return <div>Данные недоступны</div>;
     }
 
-    // const navigate = useNavigate()
-    
-    // const locationHandler = () => {
-    //     navigate("/map")
-    // }
-    const handleShowOnMap = (props) => {
-        // Здесь можно записать координаты в locationData
-        // Например:
-        const coordinates = cardArray.map(item => item.coordinates);
-        console.log(props)
-        navigate('/map', { replace: true });
+    const handleShowOnMap = (coordinates, name) => {
+        
+        // const coordinates = cardArray.map(item => item.coordinates);
+        params.append('lat', coordinates[0]);
+        params.append('lon', coordinates[1]);
+        params.append('name', name)
+        const queryString = new URLSearchParams(params).toString();
+        window.location.href = `/map?${queryString}`;
+        //navigate('/map', { replace: true });
     };
     return (
         <div>
@@ -62,15 +61,15 @@ const ScrollObjects = ({ cardArray }) => {
               {cardArray.map((item, index) => (
                 <div key={index} className="gallery-item">
                   <img src={`src/assets/${index + 1}.jpg`} alt={`Image ${index + 1}`} />
-                  <p>Name: {item.name}</p>
-                  <p>Description: {item.description}</p>
-                  <p>Location: {item.location}</p>
+                  <p>{item.name}</p>
+                  <p>{item.description}</p>
+                  <p>{item.location}</p>
                   <p>{item.coordinates[0]} --- {item.coordinates[1]}</p>
                   <Button
                     variant="gradient"
                     gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
                     type="submit"
-                    onClick={handleShowOnMap}      
+                    onClick={() => handleShowOnMap(item.coordinates, item.name)}     
                     >
                     Показать на карте
                     </Button>

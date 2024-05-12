@@ -47,7 +47,11 @@ const Scroll = ({ cardArray }) => {
                 
               {cardArray.map((item, index) => (
                 <div key={index} className="gallery-item">
-                  <img src={`src/assets/${index + 1}.jpg`} alt={`Image ${index + 1}`} />
+                  {/* <Image radius="md"
+                  src={null}
+                  
+                  style={{ textAlign: 'center' }}
+                  fallbackSrc="https://placehold.co/600x400?text=Placeholder"/> */}
                   <p>Name: {item.name}</p>
                   <p>Description: {item.description}</p>
                   <p>Location: {item.location}</p>
