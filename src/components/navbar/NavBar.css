@@ -85,3 +85,8 @@ ul li{
 .dark .search-box input::placeholder{
     color: #222;
 }
+
+a {
+    text-decoration: none;
+    color: inherit;
+ }

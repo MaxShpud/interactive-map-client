@@ -31,7 +31,12 @@ const NavBar = ({theme, setTheme}) =>{
                     <li onClick={() => navigate('/routes', {replace: true})}>Маршруты</li>
                     <li onClick={() => navigate('/favourite', {replace: true})}>Избранное</li>
                     <li onClick={() => navigate('/account', {replace: true})}>Аккаунт</li>
-                    {userData.userRole === 'ADMIN' && <li>Панель администратора</li>}
+                    {userData.userRole === 'ADMIN' && <li><a
+                            href={'http://127.0.0.1:8000/admin/'}
+                            target="_blank"
+                        >
+                            Панель админа
+                        </a></li>}
                 </ul>
                 {/* <div className="search-box">
                     <input type="text" placeholder="Search" />
