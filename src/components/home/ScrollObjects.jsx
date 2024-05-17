@@ -60,11 +60,11 @@ const ScrollObjects = ({ cardArray }) => {
                 
               {cardArray.map((item, index) => (
                 <div key={index} className="gallery-item">
-                  <img src={`src/assets/${index + 1}.jpg`} alt={`Image ${index + 1}`} />
+                  {/* <img src={`src/assets/${index + 1}.jpg`} alt={`Image ${index + 1}`} /> */}
                   <p>{item.name}</p>
-                  <p>{item.description}</p>
+                  
                   <p>{item.location}</p>
-                  <p>{item.coordinates[0]} --- {item.coordinates[1]}</p>
+                  
                   <Button
                     variant="gradient"
                     gradient={{ from: 'blue', to: 'cyan', deg: 90 }}

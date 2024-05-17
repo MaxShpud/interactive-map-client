@@ -36,7 +36,6 @@ const Map = ({theme, setTheme}) => {
     const [modalOpen, setModalOpen] = useState(false);
     const location = useLocation()
     const navigate = useNavigate()
-    const openModal = () => setModalOpen(true);
     
     
     useEffect(() => {

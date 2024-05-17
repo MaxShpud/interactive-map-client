@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import "./Scroll.css"
 import { Input, Button, List, ListItem, Image, Divider, Text, ThemeIcon } from '@mantine/core';
 
-const Scroll = ({ cardArray }) => {
+const ScrollMyRoutes = ({ cardArray }) => {
   const params = new URLSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,7 +53,7 @@ const Scroll = ({ cardArray }) => {
   };
     return (
         <div>
-          <Text>Маршруты</Text>
+          <Text>Мои маршруты</Text>
           <div className="gallery-wrap">
             
             <img src="src/assets/back.png" id="backBtn"/>
@@ -90,4 +90,4 @@ const Scroll = ({ cardArray }) => {
     )
 }
 
-export default Scroll
+export default ScrollMyRoutes

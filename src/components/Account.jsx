@@ -59,7 +59,7 @@ const Account = ({theme, setTheme}) => {
             }
         }
         fetchUserData();
-    }, [userData.token, setAccountData])
+    }, [userData.token])
     
     if (!userData.token) {
         navigate('/', {replace: true})
@@ -83,10 +83,34 @@ const Account = ({theme, setTheme}) => {
                 },
                 body: formData
             }) 
-            console.log("Response status:", response.status);
             if (response.ok) {
-                const updatedAccountData = await fetchUserData();
-                setAccountData(updatedAccountData);
+                const fetchUserData = async () => {
+                    try {
+                        const response = await fetch('/api/user/current', {
+                            headers: {
+                                Authorization: `Bearer ${userData.token}`
+                            }
+                        })
+                        if (response.ok) {
+                            const data = await response.json()
+                            setAccountData(data);
+                            setEditedValues({
+                                surname: data.surname || '',
+                                name: data.name || '',
+                                phone_number: data.phone_number || '',
+                                about_me: data.about_me || ''
+                            });
+        
+                        } else {
+                            console.error('Failed to fetch user data')
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user data:', error)
+                    }
+                }
+                await fetchUserData()
+                // const updatedAccountData = await fetchUserData();
+                // setAccountData(updatedAccountData);
                 setEditingField(null)
                 setFile(null);
                 setSuccessMessage("Фото успешно загружено!")
@@ -94,8 +118,6 @@ const Account = ({theme, setTheme}) => {
                     close();
                     setSuccessMessage('');
                   }, 4000);
-            } else {
-                console.error('Failed to update user data')
             }
         } catch (error) {
             setErrorMessage(error.message);

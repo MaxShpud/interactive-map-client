@@ -33,7 +33,7 @@ const params = {
 
 
 
-const CardRoute = ({ updateWaypoints, createdLength  }) => {  
+const CardRoute = ({ updateWaypoints, createdLength, showingObject }) => {  
   const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />;
     const checkIcon = <IconCheck style={{ width: rem(20), height: rem(20) }} />;
     const [modalOpen, setModalOpen] = useState(false);
@@ -124,8 +124,8 @@ const CardRoute = ({ updateWaypoints, createdLength  }) => {
         };
         const newObject = {
           "name" : place.display_name,
-          "longitude": place.lon,
-          "latitude": place.lat,
+          "longitude": place.lat,
+          "latitude": place.lon,
           "type": "USER_OBJECT"
         }
         setObjects([...objects, newObject])

@@ -11,6 +11,7 @@ import { Card, Image, Text, Badge, Button, Group } from '@mantine/core';
 
 const Favourite = ({theme, setTheme}) => {
     const [favouriteObjects, setFavouriteObjects] = useState([]);
+    const [favouriteRoutes, setFavouriteRoutes] = useState([]);
     const [userData] = useContext(UserContext)
     const [expandedPopups, setExpandedPopups] = useState({})
     const navigate = useNavigate()
@@ -38,7 +39,29 @@ const Favourite = ({theme, setTheme}) => {
         fetchMarkers();
     }, []);
 
-    console.log("OBJ",favouriteObjects)
+    useEffect(() => {
+        const fetchMarkers1 = async () => {
+            try {
+                const response = await fetch("/api/routes/favourite", {
+                    headers: {
+                        Authorization: `Bearer ${userData.token}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                
+                    setFavouriteRoutes(data.routes);
+                    
+                } else {
+                    console.error('Failed to fetch routes data');
+                } 
+            } catch (error) {
+                console.error("Error fetching markers:", error);
+            }
+        };
+        fetchMarkers1();
+    }, []);
+
     if (!userData.token) {
         navigate('/', {replace: true})
     }
@@ -72,6 +95,33 @@ const Favourite = ({theme, setTheme}) => {
         }
     };
 
+    const handleMarkerPhotoClick1 = async (favRouteClicked) => {
+        const isFavourite = favRouteClicked.is_favourite;
+    
+        try {
+            const response = await fetch(`/api/route?route_id=${favRouteClicked.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${userData.token}`
+                },
+                body: JSON.stringify({ is_favourite: !isFavourite })
+            });
+    
+            if (response.ok) {
+                const updatedRoute = await response.json();
+                const updatedRoutes = favouriteRoutes.map((favRoute) =>
+                    favRoute.id === updatedRoute.id ? updatedRoute : favRoute
+                );
+                setFavouriteRoutes(updatedRoutes);
+            } else {
+                console.error("Failed to update object");
+            }
+        } catch (error) {
+            console.error("Error updating object:", error);
+        }
+    };
+    
     const togglePopupExpansion = (objectId) => {
         setExpandedPopups((prevState) => ({
             ...prevState,
@@ -82,6 +132,7 @@ const Favourite = ({theme, setTheme}) => {
     return (
         <div className={`container ${theme}`}>
             <NavBar theme={theme} setTheme={setTheme}/>
+            
             <div className="split-container">
                 <div className="locations">
                     <h2>Достопримечательности</h2>
@@ -157,7 +208,36 @@ const Favourite = ({theme, setTheme}) => {
                 <div className="routes">
                     <h2>Маршруты</h2>
                     <div className="scrollable-content">
-                        {/* Здесь будет контент для маршрутов */}
+                    {favouriteRoutes && favouriteRoutes.map((favRoute, index) => (
+                            <Card shadow="sm" padding="lg" radius="md" withBorder className="card-holder">
+                                <Group justify="space-between" mt="md" mb="xs">
+                                    <Text  fw={500}>
+                                        {favRoute.name}
+                                    </Text>
+                                    <Image
+                                        src={
+                                            favRoute.is_favourite
+                                                ? fav_selected
+                                                : fav_unselected
+                                        }
+                                        alt="Favourite"
+                                        height={40}
+                                        onClick={(e) =>{e.stopPropagation();
+                                            handleMarkerPhotoClick1(
+                                                favRoute
+                                            )}
+                                        }
+                                    />
+                                </Group>
+                                        <br/>
+                                        <Card.Section component="a"  style={{ textAlign: 'center' }}>
+                                        </Card.Section>
+                                        <Group style={{ display: 'block' }}>
+                                            <Text size="sm" >{favRoute.location}</Text> 
+                                            <Text size="sm" >{favRoute.description}</Text> 
+                                        </Group> 
+                            </Card>                     
+                        ))}      
                     </div>
                     
                 </div>

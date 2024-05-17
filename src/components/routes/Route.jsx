@@ -15,26 +15,33 @@ import CardRoute from "./CardRoute";
 const Route = ({theme, setTheme}) => {
     const [userData, setUserData] = useContext(UserContext)
     const [selectPosition, setSelectPosition] = useState(null);
-
+   
+    
     const location = useLocation()
     const navigate = useNavigate()
 
     const [waypoints, setWaypoints] = useState([]);
     const [createdLength, setCreatedLength] = useState("")
-
+    const searchParams = new URLSearchParams(location.search);
+    const items = location.state
+    
     const updateWaypoints = (newWaypoints) => {
       setWaypoints(newWaypoints);
     };
     
     useEffect(() => {
-        console.log('Current location is ', location)
-        console.log("ROUTEROYUTEm" ,waypoints)
     }, [location, waypoints])
 
     if (!userData.token) {
         
         navigate('/', {replace: true})
     }
+    useEffect(() => {
+      if (items && items.objects && items.objects.length) {
+          const newWaypoints = items.objects.map(obj => obj.coordinates);
+          setWaypoints(newWaypoints);
+      }
+  }, [items]);
     
     return (
         <div className={`container ${theme}`}>

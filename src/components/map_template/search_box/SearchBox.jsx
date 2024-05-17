@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Input, Button, List, ListItem, Image, Divider, Text, ThemeIcon } from '@mantine/core';
+import React, { useState, useEffect, useRef } from "react";
+import { Input, Button, List, ListItem, Image, Divider, ThemeIcon } from '@mantine/core';
 import location_pin from '../../../assets/location-pin.png'
 import { useDebounce } from "@uidotdev/usehooks";
+import { FileButton, Group, Text } from '@mantine/core';
 
 const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search?";
 const params = {
@@ -53,6 +54,10 @@ const SearchBox = (props) =>{
 
     fetchData();
   }, [debouncedSearchText]);
+
+
+
+  
   return (
     <div style={{ display: "flex", flexDirection: "column", paddingBlockStart: "10px" }}>
       <div style={{ display: "flex" }}>

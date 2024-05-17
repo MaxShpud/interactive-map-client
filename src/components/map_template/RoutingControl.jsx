@@ -8,6 +8,7 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 //52.093751', '23.6851851' - brest
 const createRoutineMachineLayer = (props) => { //{ position, waypoints, color, setCreatedRoute }
   const { position, waypoints, color, setCreatedRoute } = props
+  console.log("WAY@YAW@, ", waypoints)
   const instance = L.Routing.control({
     position,
     waypoints: waypoints,
